@@ -1,0 +1,40 @@
+{
+  "model": "Random forest (150 trees)",
+  "test_accuracy": 0.91,
+  "test_balanced_accuracy": 0.9054,
+  "test_macro_f1": 0.9058,
+  "danger_recall": 0.8941,
+  "danger_missed_as_safe": 0.0,
+  "model_comparison": {
+    "Logistic regression": {
+      "cv_macro_f1": 0.8619,
+      "cv_accuracy": 0.8674,
+      "test_accuracy": 0.877,
+      "test_macro_f1": 0.8719
+    },
+    "Decision tree (depth 6)": {
+      "cv_macro_f1": 0.8895,
+      "cv_accuracy": 0.8939,
+      "test_accuracy": 0.898,
+      "test_macro_f1": 0.894
+    },
+    "Random forest (150 trees)": {
+      "cv_macro_f1": 0.9068,
+      "cv_accuracy": 0.9111,
+      "test_accuracy": 0.91,
+      "test_macro_f1": 0.9058
+    }
+  },
+  "macro_f1_without_sensor": {
+    "temperature_c": 0.8798,
+    "humidity_pct": 0.8947,
+    "dust_ugm3": 0.8702,
+    "aqi_proxy": 0.6868
+  },
+  "feature_importances": {
+    "temperature_c": 0.1585,
+    "humidity_pct": 0.0858,
+    "dust_ugm3": 0.2874,
+    "aqi_proxy": 0.4683
+  }
+}

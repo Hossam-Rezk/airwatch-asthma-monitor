@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AirWatch Asthma Monitor</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f766e'/%3E%3Cpath d='M7 13h12a3 3 0 1 0-3-3M7 18h16a3 3 0 1 1-3 3' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#dashboard">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 10h9a2.5 2.5 0 1 0-2.5-2.5M4 14h12a2.5 2.5 0 1 1-2.5 2.5"/></svg>
+        </span>
+        <span>AirWatch <span class="brand-sub">Asthma Monitor</span></span>
+      </a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="#dashboard" data-page="dashboard">Dashboard</a>
+        <a href="#readings" data-page="readings">Readings</a>
+        <a href="#help" data-page="help">Help</a>
+      </nav>
+      <div class="nav-status" id="navStatus" title="Pico connection">
+        <span class="dot"></span><span class="label">Not connected</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ======================================================= dashboard -->
+    <section class="page" id="page-dashboard">
+      <div class="top-grid">
+        <div class="card connect-card">
+          <div class="card-head">
+            <h2>Raspberry Pi Pico</h2>
+            <span class="pill" id="connPill">Disconnected</span>
+          </div>
+          <label class="field-label" for="portSelect">USB port</label>
+          <div class="port-row">
+            <select id="portSelect"></select>
+            <button class="icon-btn" id="refreshPorts" title="Refresh port list" aria-label="Refresh port list">
+              <svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>
+            </button>
+          </div>
+          <button class="btn btn-primary" id="connectBtn">Connect</button>
+          <p class="conn-message" id="connMessage">Plug the Pico into a USB port, then press Connect.</p>
+          <dl class="conn-facts">
+            <div><dt>Station</dt><dd id="factStation">–</dd></div>
+            <div><dt>Last reading</dt><dd id="factLast">–</dd></div>
+          </dl>
+        </div>
+
+        <div class="card ai-card" id="aiCard" data-risk="NONE">
+          <div class="card-head">
+            <h2>
+              <svg class="ai-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>
+              AI Analysis &amp; Warnings
+            </h2>
+            <span class="muted small" id="aiUpdated"></span>
+          </div>
+          <div class="ai-body">
+            <div class="risk-badge" id="riskBadge">
+              <span class="risk-level" id="riskLevel">–</span>
+              <span class="risk-caption">risk level</span>
+            </div>
+            <div class="ai-text">
+              <h3 id="aiHeadline">Waiting for sensor data</h3>
+              <p class="muted" id="aiIntro">Connect the Pico to start the live analysis of temperature, humidity, air quality and dust.</p>
+              <ul class="factor-list" id="factorList"></ul>
+              <div class="advice" id="adviceBox" hidden>
+                <h4>What to do</h4>
+                <ul id="adviceList"></ul>
+              </div>
+              <ul class="issue-list" id="issueList"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-grid" id="chartGrid"></div>
+    </section>
+
+    <!-- ======================================================= readings -->
+    <section class="page" id="page-readings" hidden>
+      <div class="card">
+        <div class="card-head">
+          <h2>Recent readings</h2>
+          <a class="btn btn-ghost" href="/api/readings.csv" download>Download CSV</a>
+        </div>
+        <div class="table-wrap">
+          <table class="readings">
+            <thead><tr><th>Time</th><th>Temperature</th><th>Humidity</th><th>Air quality</th><th>Dust</th><th>Risk</th></tr></thead>
+            <tbody id="readingsBody"><tr><td colspan="6" class="muted center">No readings yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================= help -->
+    <section class="page" id="page-help" hidden>
+      <div class="card help">
+        <h2>Getting started</h2>
+        <ol class="steps">
+          <li><strong>Prepare the Pico (once).</strong> Install MicroPython on the Pico and copy
+            <code>main.py</code>, <code>config.py</code>, <code>sensors.py</code> and <code>alerts.py</code>
+            from the <code>pico</code> folder onto it (for example with Thonny). Close Thonny afterwards.</li>
+          <li><strong>Plug it in.</strong> Connect the Pico to this computer with a USB <em>data</em> cable.
+            Its LED blinks blue while it starts.</li>
+          <li><strong>Connect.</strong> On the Dashboard pick the Pico in the USB port list (it is chosen for you
+            when found) and press <em>Connect</em>.</li>
+          <li><strong>Watch.</strong> The four graphs update every few seconds and the AI panel explains the
+            current asthma-trigger risk. The Pico's LED and buzzer follow the same risk level.</li>
+        </ol>
+        <h2>Risk levels</h2>
+        <div class="legend-grid">
+          <div class="legend safe"><strong>Safe</strong><span>Conditions are unlikely to trigger asthma.</span></div>
+          <div class="legend warning"><strong>Warning</strong><span>Possible triggers. Sensitive people should take care.</span></div>
+          <div class="legend danger"><strong>Danger</strong><span>High risk. Avoid the area and follow your asthma action plan.</span></div>
+        </div>
+        <h2>Troubleshooting</h2>
+        <ul class="plain">
+          <li><strong>No Pico in the list:</strong> try another cable or USB port; charge-only cables do not carry data.</li>
+          <li><strong>"Port in use":</strong> close Thonny or any other serial monitor, then press Connect again.</li>
+          <li><strong>Connected but no readings:</strong> the Pico files are missing or have an error. Open the Pico in Thonny to see the message, then close Thonny.</li>
+          <li><strong>Air quality missing for the first 30 seconds:</strong> normal, the gas sensor is warming up.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>AirWatch Asthma Monitor · PRJ-004</span>
+      <span class="muted">Screening aid only, not a medical device. Always follow your doctor's asthma action plan.</span>
+    </div>
+  </footer>
+
+  <script src="/static/charts.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

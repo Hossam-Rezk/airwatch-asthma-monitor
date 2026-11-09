@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# created at run time
+pc/data/readings_log.csv
+legacy/*.db
+legacy/*.log
+legacy/model.joblib
+legacy/model.json
+legacy/patients.json
+legacy/synthetic_dataset.csv
+
+# editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

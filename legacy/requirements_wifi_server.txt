@@ -1,0 +1,6 @@
+flask>=3.0
+scikit-learn>=1.3
+pandas>=2.0
+numpy>=1.24
+joblib>=1.3
+waitress>=3.0        # optional: production-grade server (the script falls back to Flask's own)
